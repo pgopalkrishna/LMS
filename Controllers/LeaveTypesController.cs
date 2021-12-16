@@ -10,6 +10,7 @@ namespace LMS.Controllers
         public static List<LeaveType> LeaveTypes = new List<LeaveType>();
         public IActionResult Index()
         {
+            ViewBag.TotalTypes = LeaveTypes.Count();
             return View(LeaveTypes);
         }
         [HttpGet]
@@ -21,15 +22,20 @@ namespace LMS.Controllers
         [HttpGet]
         public IActionResult Create() 
         {
+            ViewBag.Id = LeaveTypes.Count() == 0 ? 1 : LeaveTypes.Last<LeaveType>().Id + 1;
+            ViewBag.IsActive = true;
             return View();
         }
         [HttpPost]
         public IActionResult Create(LeaveType leaveType)
         {
-                leaveType.Id = LeaveTypes.Count()==0?1: LeaveTypes.Last<LeaveType>().Id + 1;
-                leaveType.IsActive = true;
-                LeaveTypes.Add(leaveType);
+            if (ModelState.IsValid)
+            { 
+                 LeaveTypes.Add(leaveType);
                 return RedirectToAction("Index");
+            }
+            return View(leaveType);
+               
         }
         [HttpGet]
         public IActionResult Edit(int id)
