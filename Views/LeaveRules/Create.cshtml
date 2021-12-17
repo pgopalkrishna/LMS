@@ -1,0 +1,56 @@
+﻿@model LMS.Models.LeaveRule
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*@Html.HiddenFor(model => model.Id)
+
+        @Html.HiddenFor(model => model.IsActive)*@
+            <div class="form-group" Hidden>
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" value="@ViewBag.RuleId" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m=>m.NoOfLeaves)
+                @Html.EditorFor(m=>m.NoOfLeaves)
+                <span> @Html.ValidationMessageFor(m => m.NoOfLeaves, "", new { @class = "text-danger" })</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LeaveId" class="control-label">Leave Type</label>
+                @Html.DropDownList("LeaveId", new SelectList(ViewBag.leaves, "LeaveId", "Name"), "Select Leave Type")
+            <span>@Html.ValidationMessageFor(m => m.LeaveId, "", new { @class = "text-danger" })</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LeaveValidity" class="control-label">For Period</label>
+                @Html.DropDownList("LeaveValidity", ViewBag.leaveValidity as IEnumerable<SelectListItem>, "Select Leave Type")
+            <span>@Html.ValidationMessageFor(m => m.LeaveValidity, "", new { @class = "text-danger" })</span>
+            </div>
+            <div class="form-group form-check">
+                @Html.DisplayNameFor(m => m.IsCarryForward)
+                <label class="form-check-label">
+                    @Html.CheckBoxFor(m => m.IsCarryForward)
+                </label>
+                <span></span>@Html.ValidationMessageFor(m => m.LeaveValidity, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label asp-for="CarryforwardCap" class="control-label">Carryforward Cap</label>
+                @Html.EditorFor(m => Model.CarryforwardCap)
+            <span>@Html.ValidationMessageFor(m => m.CarryforwardCap, "", new { @class = "text-danger" })</span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+</div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

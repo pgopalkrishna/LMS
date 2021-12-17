@@ -1,0 +1,61 @@
+﻿@model IEnumerable<LMS.ViewModels.LeaveRuleVM>
+<h1>Define Leave Rules</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LeaveType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NoOfLeaves)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ForPeriod)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsCarryForward)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CarryforwardCap)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeaveType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoOfLeaves)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ForPeriod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsCarryForward)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CarryforwardCap)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
