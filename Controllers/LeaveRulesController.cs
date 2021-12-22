@@ -19,6 +19,7 @@ namespace LMS.Controllers
             new LeaveType { Id = 3, Name = "Seek", IsActive = true },
             new LeaveType { Id = 4, Name = "Maternity", IsActive = true }
         };
+        [HttpGet]
         public IActionResult Index()
         {
             var rules = (from r in leaveRules
@@ -38,10 +39,16 @@ namespace LMS.Controllers
             return View(rules);
         }
         [HttpGet]
+        public IActionResult Details(int id)
+        {
+            LeaveRule Rule = leaveRules.Find(l => l.Id == id);
+            return View(Rule);
+        }
+        [HttpGet]
         public IActionResult Create()
         {
             ViewBag.RuleId = leaveRules.Count() == 0 ? 1 : leaveRules.Last<LeaveRule>().Id + 1;
-            ViewBag.leaves = leaveTypes.Select(s=>new { LeaveId=s.Id, Name=s.Name }).ToList();
+            ViewBag.leaves = leaveTypes.Select(s => new { LeaveId = s.Id, Name = s.Name }).ToList();
             ViewBag.leaveValidity = new SelectList((from LeaveValidityEnum v in Enum.GetValues(typeof(LeaveValidityEnum)) select new { LeaveValidity = (int)v, Name = v.ToString() }), "LeaveValidity", "Name");
             return View();
         }
@@ -57,7 +64,54 @@ namespace LMS.Controllers
             ViewBag.leaves = leaveTypes.Select(s => new { LeaveId = s.Id, Name = s.Name }).ToList();
             ViewBag.leaveValidity = new SelectList((from LeaveValidityEnum v in Enum.GetValues(typeof(LeaveValidityEnum)) select new { LeaveValidity = (int)v, Name = v.ToString() }), "LeaveValidity", "Name");
             return View(leaveRule);
-
         }
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            LeaveRule Rule = leaveRules.Find(l => l.Id == id);
+            ViewBag.leaves = leaveTypes.Select(s => new { LeaveId = s.Id, Name = s.Name }).ToList();
+            ViewBag.leaveValidity = (from LeaveValidityEnum v in Enum.GetValues(typeof(LeaveValidityEnum)) select new { LeaveValidity = (int)v, Name = v.ToString() }).ToList();
+            return View(Rule);
+        }
+        [HttpPost]
+        public IActionResult Edit(LeaveRule leaveRule)
+        {
+            if (ModelState.IsValid)
+            {
+                LeaveRule Rule = leaveRules.Find(l => l.Id == leaveRule.Id);
+                if (Rule != null)
+                {
+                    leaveRules.Remove(Rule);
+                    leaveRules.Add(leaveRule);
+                    return RedirectToAction("Index");
+                }
+            }
+            ViewBag.leaves = leaveTypes.Select(s => new { LeaveId = s.Id, Name = s.Name }).ToList();
+            //ViewBag.leaveValidity = new SelectList((from LeaveValidityEnum v in Enum.GetValues(typeof(LeaveValidityEnum)) select new { LeaveValidity = (int)v, Name = v.ToString() }), "LeaveValidity", "Name");
+            ViewBag.leaveValidity = (from LeaveValidityEnum v in Enum.GetValues(typeof(LeaveValidityEnum)) select new { LeaveValidity = (int)v, Name = v.ToString() }).ToList();
+            return View(leaveRule);
+        }
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            LeaveRule Rule = leaveRules.Find(l => l.Id == id);
+            ViewBag.leaves = leaveTypes.Select(s => new { LeaveId = s.Id, Name = s.Name }).ToList();
+            ViewBag.leaveValidity = new SelectList((from LeaveValidityEnum v in Enum.GetValues(typeof(LeaveValidityEnum)) select new { LeaveValidity = (int)v, Name = v.ToString() }), "LeaveValidity", "Name");
+            return View(Rule);
+        }
+        [HttpPost]
+        public IActionResult Delete(LeaveRule leaveRule)
+        {
+            LeaveRule Rule = leaveRules.Find(l => l.Id == leaveRule.Id);
+            if (Rule != null)
+            {
+                leaveRules.Remove(Rule);
+                return RedirectToAction("Index");
+            }
+            ViewBag.leaves = leaveTypes.Select(s => new { LeaveId = s.Id, Name = s.Name }).ToList();
+            ViewBag.leaveValidity = new SelectList((from LeaveValidityEnum v in Enum.GetValues(typeof(LeaveValidityEnum)) select new { LeaveValidity = (int)v, Name = v.ToString() }), "LeaveValidity", "Name");
+            return View(leaveRule);
+        }
+        
     }
 }
